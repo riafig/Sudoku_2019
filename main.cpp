@@ -95,7 +95,7 @@ bool fillValidNumber(grid& sudoku, int row, int col) {
 			col += 1;
 		}
 	}
-	
+	// Superfluous?
 	// Termination condition
 	if ((col == sudoku.size() - 1) && (row == sudoku.size())) {
 		return true;
