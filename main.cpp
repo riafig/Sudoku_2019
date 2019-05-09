@@ -79,36 +79,43 @@ bool fillValidNumber(grid& sudoku, int row, int col) {
 	assert(row >= 0 && row <= (int)sudoku.size());
 	assert(col >= 0 && col < (int)sudoku.size());
 		
-	for (int r = row; r < (int)sudoku.size(); r++) {
-		for (int c = col; c < (int)sudoku.size(); c++) {
-			if (sudoku[r][c] != 0) {
-				continue;
-			}
-			for (unsigned int num = 1; num <= sudoku.size(); num++) {
-				if (isValid(sudoku, num, r, c)) {
-					sudoku[r][c] = num;
-					// Remove later:
-					printSudoku(sudoku);
-					
-					if (col == (int)sudoku.size() - 1) {
-						// Termination condition, or so I thought.
-						if (row == sudoku.size() - 1) {
-							return true;
-						}
-						fillValidNumber(sudoku, row + 1, 0);
-					}
-					if (!fillValidNumber(sudoku, row, col + 1)) {
-						sudoku[r][c] = 0;
-					}
-					// Termination condition:
-					if (col == (int)sudoku.size() - 1 && row == sudoku.size() - 1) {
-						return true;
-					}
-				}
-			}
-			return false; // backtrack
+	// check if empty
+	while (sudoku[row][col] != 0) {
+		
+		// Termination condition
+		if ((col == sudoku.size() - 1) && (row == sudoku.size()-1)) {
+			return true;
 		}
-		col = 0;
+				
+		if (col == sudoku.size() - 1) {
+			col = 0;
+			row++;
+		}
+		else {
+			col += 1;
+		}
+	}
+	
+	// Termination condition
+	if ((col == sudoku.size() - 1) && (row == sudoku.size())) {
+		return true;
+	}
+	
+	// brute force a solution
+	for (unsigned int num = 1; num <= sudoku.size(); num++) {
+		if (isValid(sudoku, num, row, col)) {
+			sudoku[row][col] = num;
+			
+			// remove when done:
+			printSudoku(sudoku);
+			
+			if (!fillValidNumber(sudoku, row, col)) {
+				sudoku[row][col] = 0;
+			}
+			else {
+				return true;
+			}
+		}
 	}
 	return false;
 }
